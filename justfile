@@ -4,8 +4,8 @@ set dotenv-load
 # env variables
 TESTPYPI_TOKEN := env('TESTPYPI_TOKEN')
 PYPI_TOKEN := env('PYPI_TOKEN')
-PYPI_PROJECT := "pydeps"
-IMPORT_PROJECT := "pydeps"
+PYPI_PROJECT := "depsize"
+IMPORT_PROJECT := "depsize"
 
 
 # list recipes

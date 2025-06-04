@@ -164,7 +164,7 @@ def write_deps_json(data: dict, file_path: Path):
 
 # %%
 def main():
-    description = "pydeps: Get the total size of installed python dependencies in MB. \n Run 'pydeps total' to get a summary including total size and the largest packages. \n Run 'pydeps --o FILE' to export as JSON, f.ex 'pydeps --o data/packages.json'"
+    description = "depsize: Get the total size of installed python dependencies in MB. \n Run 'depsize total' to get a summary including total size and the largest packages. \n Run 'depsize --o FILE' to export as JSON, f.ex 'depsize --o data/packages.json'"
     parser = argparse.ArgumentParser(description=description)
     parser.add_argument(
         "command",

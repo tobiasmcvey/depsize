@@ -19,7 +19,7 @@ executing==2.2.0
 importlib-metadata==8.5.0
     # via jupyter-client
 ipykernel==6.29.5
-    # via pydeps-size (pyproject.toml:dev)
+    # via depsize (pyproject.toml:dev)
 ipython==8.12.3
     # via ipykernel
 jedi==0.19.2
@@ -63,7 +63,7 @@ pyzmq==26.4.0
     #   ipykernel
     #   jupyter-client
 ruff==0.11.12
-    # via pydeps-size (pyproject.toml:dev)
+    # via depsize (pyproject.toml:dev)
 six==1.17.0
     # via python-dateutil
 stack-data==0.6.3
