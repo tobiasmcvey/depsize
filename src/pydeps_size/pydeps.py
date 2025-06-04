@@ -164,8 +164,13 @@ def write_deps_json(data: dict, file_path: Path):
 
 # %%
 def main():
-    parser = argparse.ArgumentParser(
-        description="Get the total size of python dependencies and, if you'd like, export them to JSON."
+    description = "pydeps: Get the total size of installed python dependencies in MB. Use 'pydeps total' to get a summary or '--o FILE' to export as JSON"
+    parser = argparse.ArgumentParser(description=description)
+    parser.add_argument(
+        "command",
+        nargs="?",
+        choices=["total"],
+        help="Subcommand to run. Use 'total' to get size summary.",
     )
     parser.add_argument(
         "--o",
@@ -177,12 +182,14 @@ def main():
 
     args = parser.parse_args()
 
-    if args.output_path:
-        data = get_pip_packages()
-        result_path = write_deps_json(data, args.output_path)
-        print(f"Dependencies written to {result_path.resolve()}")
-    else:
+    if args.command == "total":
         list_installed_packages_sizes()
+    elif args.output_path:
+        data = get_pip_packages()
+        output_path = write_deps_json(data, args.output_path)
+        print(f"Dependencies written to {output_path}")
+    else:
+        print(description)
 
 
 if __name__ == "__main__":
