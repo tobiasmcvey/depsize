@@ -1,5 +1,5 @@
 [project]
-name = "pydeps"
+name = "depsize"
 version = "0.1.0"
 description = "A package that tells you the size of your dependencies in Megabytes!"
 readme = "README.md"
@@ -14,7 +14,7 @@ dev = [
 ]
 
 [project.scripts]
-pydeps = "pydeps.pydeps:main"
+depsize = "depsize.depsize:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
