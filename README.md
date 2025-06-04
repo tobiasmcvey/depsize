@@ -12,12 +12,16 @@ Supports python version 3.8 and newer.
 
 Install pydeps with your tools of choice, for example
 
-pip
+**pip**
+
 ```bash
-pip install pydeps --dev
+pip install pydeps
 ```
 
-uv
+or add pydeps to your `requirements-dev.txt` file and install it with your other dev requirements using ` `pip install -r requirements-dev.txt`. 
+
+**uv**
+
 ```bash
 uv add pydeps --dev
 ```
