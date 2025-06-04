@@ -220,6 +220,11 @@ This currently works in the CLI
 
 ```bash
 > pydeps
+pydeps: Get the total size of installed python dependencies in MB. Use 'pydeps total' to get a summary or '--o FILE' to export as JSON
+```
+
+```bash
+> pydeps total
 Total size of all packages: 56.27 MB
 ==================================================
 Packages larger than 1 MB:
@@ -238,6 +243,6 @@ Combined size of packages smaller than 1 MB: 6.62 MB
 and
 
 ```bash
-> pydeps --o data/dependencies.json
+> pydeps --o data/packages.json
 Dependencies written to .../data/packages.json
 ```
