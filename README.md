@@ -236,5 +236,5 @@ Example JSON file contents:
 ```bash
 just install # to install dependencies for depsize
 just build # to build depsize
-uv pip install -e . # to install an editable build
+just edit-install # to install an editable build
 ```
