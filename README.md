@@ -67,6 +67,14 @@ You can store the results as a json file with ```depsize --o File```, which will
 Dependencies written to data/packages.json
 ```
 
+If you only want to measure results for the main dependencies then you can extract them from a requirements txt file like so:
+
+```bash
+> depsize --o data/packages.json --main # add main flag to only include main and exclude dev
+Dependencies written to data/packages.json
+```
+
+
 Example JSON file contents:
 
 <details>
