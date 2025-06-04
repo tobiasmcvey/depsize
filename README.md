@@ -214,3 +214,11 @@ Example JSON file contents:
 ]
 ```
 </details>
+
+
+This currently works in the CLI 
+
+```bash
+python src/pydeps_size/pydeps.py --o "../../dat
+a/deps.json"
+```
