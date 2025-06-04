@@ -4,8 +4,8 @@ set dotenv-load
 # env variables
 TESTPYPI_TOKEN := env('TESTPYPI_TOKEN')
 PYPI_TOKEN := env('PYPI_TOKEN')
-PYPI_PROJECT := "pydeps-size"
-IMPORT_PROJECT := "pydeps_size"
+PYPI_PROJECT := "pydeps"
+IMPORT_PROJECT := "pydeps"
 
 
 # list recipes
@@ -19,6 +19,10 @@ IMPORT_PROJECT := "pydeps_size"
     uv sync --frozen
     uv pip compile pyproject.toml -o requirements/main.txt # main deps only
     uv pip compile --group dev -o requirements/dev.txt # dev 
+
+# install editable version for local development
+@edit-install:
+    uv pip install -e .
 
 # update dependencies in lockfile
 @update:

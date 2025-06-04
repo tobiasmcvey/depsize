@@ -3,6 +3,7 @@ import site
 from pathlib import Path
 import subprocess
 import json
+import argparse
 
 
 # %%
@@ -162,4 +163,35 @@ def write_deps_json(data: dict, file_path: Path):
 
 
 # %%
-list_installed_packages_sizes()  # regular program
+def main():
+    description = "pydeps: Get the total size of installed python dependencies in MB. \n Run 'pydeps total' to get a summary including total size and the largest packages. \n Run 'pydeps --o FILE' to export as JSON, f.ex 'pydeps --o data/packages.json'"
+    parser = argparse.ArgumentParser(description=description)
+    parser.add_argument(
+        "command",
+        nargs="?",
+        choices=["total"],
+        help="Subcommand to run. Use 'total' to get size summary.",
+    )
+    parser.add_argument(
+        "--o",
+        "--output",
+        dest="output_path",
+        type=Path,
+        help="Path to output JSON file, f.ex data/packages.json",
+    )
+
+    args = parser.parse_args()
+
+    if args.command == "total":
+        list_installed_packages_sizes()
+    elif args.output_path:
+        data = get_pip_packages()
+        output_path = write_deps_json(data, args.output_path)
+        print(f"Dependencies written to {output_path}")
+    else:
+        print(description)
+
+
+if __name__ == "__main__":
+    main()
+# %%
