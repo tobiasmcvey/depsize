@@ -1,50 +1,50 @@
-# pydeps
+# depsize
 
 This python package helps you measure the disk space used by your python dependencies. The purpose of this package is to help you understand how much each package contributes to the size of your app, and to help you find ways to reduce the size of the app.
 
 When used in combination with `docker image history` this tool helps you find ways to reduce the total size of the docker image.
 
-This package has no third party dependencies. The [program](/src/pydeps_size/pydeps.py) only uses the built-in packages of python.
+This package has no third party dependencies. The [program](/src/depsize_size/depsize.py) only uses the built-in packages of python.
 
 Supports python version 3.8 and newer.
 
 ## Install
 
-Install pydeps with your tools of choice, for example
+Install depsize with your tools of choice, for example
 
 **pip**
 
 ```bash
-pip install pydeps
+pip install depsize
 ```
 
-or add pydeps to your `requirements-dev.txt` file and install it with your other dev requirements using ` `pip install -r requirements-dev.txt`. 
+or add depsize to your `requirements-dev.txt` file and install it with your other dev requirements using ` `pip install -r requirements-dev.txt`. 
 
 **uv**
 
 ```bash
-uv add pydeps --dev
+uv add depsize --dev
 ```
 
 Or just copy the main python program as a script. It runs on all versions greater than and including python 3.7.
 
-## How to use pydeps
+## How to use depsize
 
-You can run the pydeps package from within your application repository from the terminal by running 
+You can run the depsize package from within your application repository from the terminal by running 
 
-Run ```pydeps``` to get a description of the tool
+Run ```depsize``` to get a description of the tool
 
 ```bash
-> pydeps
-pydeps: Get the total size of installed python dependencies in MB.
- Use 'pydeps total' to get a summary including total size and the largest packages.
- Use 'pydeps --o FILE' to export as JSON, f.ex 'pydeps --o data/packages.json'
+> depsize
+depsize: Get the total size of installed python dependencies in MB.
+ Use 'depsize total' to get a summary including total size and the largest packages.
+ Use 'depsize --o FILE' to export as JSON, f.ex 'depsize --o data/packages.json'
 ```
 
-Run ```pydeps total``` to print the size of all packages in MB, and name the largest:
+Run ```depsize total``` to print the size of all packages in MB, and name the largest:
 
 ```bash
-> pydeps total
+> depsize total
 Total size of all packages: 56.27 MB
 ==================================================
 Packages larger than 1 MB:
@@ -60,10 +60,10 @@ Packages smaller than 1 MB: 68 packages
 Combined size of packages smaller than 1 MB: 6.62 MB
 ```
 
-You can store the results as a json file with ```pydeps --o File```, which will contain the python packages by name, package version and size in megabytes.
+You can store the results as a json file with ```depsize --o File```, which will contain the python packages by name, package version and size in megabytes.
 
 ```bash
-> pydeps --o data/packages.json
+> depsize --o data/packages.json
 Dependencies written to data/packages.json
 ```
 
@@ -234,7 +234,7 @@ Example JSON file contents:
 ## Developing locally
 
 ```bash
-just install # to install dependencies for pydeps
-just build # to build pydeps
+just install # to install dependencies for depsize
+just build # to build depsize
 uv pip install -e . # to install an editable build
 ```
