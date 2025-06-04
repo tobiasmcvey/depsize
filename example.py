@@ -1,6 +1,6 @@
 # %%
 from pathlib import Path
-from src.pydeps_size.pydeps import (
+from src.depsize.depsize import (
     get_package_size,
     list_installed_packages_sizes,
     get_pip_packages,
@@ -22,3 +22,5 @@ list_installed_packages_sizes()  # regular program
 # %%
 # write a json file with each dependency, version number and size in MB
 write_deps_json(data=get_pip_packages(), file_path=Path("../../data/deps.json"))
+
+# %%
