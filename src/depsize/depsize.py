@@ -99,14 +99,26 @@ def list_installed_packages_sizes():
     )
 
 
-def get_pip_packages():
+def get_pip_packages(main_only=False):
     """
     Gets a list of packages in json using "pip list --format=json"
+
+    If main_only is True, limits to the main group (excluding dev).
     """
-    res = subprocess.run(
-        ["uv", "pip", "list", "--format=json"], capture_output=True, text=True
-    )
-    return json.loads(res.stdout)
+    cmd = ["uv", "pip", "list", "--format=json"]
+    if main_only:
+        cmd += ["--group=main"]
+
+    res = subprocess.run(cmd, capture_output=True, text=True)
+
+    if res.returncode != 0:
+        print(f"Error running pip list: \n {res.stderr}")
+        return []
+
+    try:
+        return json.loads(res.stdout)
+    except json.JSONDecodeError:
+        print(f"Failed to decode JSON:\n stdout: {res.stdout}\n stderr: {res.stderr}")
 
 
 def write_deps_json(data: dict, file_path: Path):
@@ -179,13 +191,16 @@ def main():
         type=Path,
         help="Path to output JSON file, f.ex data/packages.json",
     )
+    parser.add_argument(
+        "--main", action="store_true", help="Only include main dependencies"
+    )
 
     args = parser.parse_args()
 
     if args.command == "total":
         list_installed_packages_sizes()
     elif args.output_path:
-        data = get_pip_packages()
+        data = get_pip_packages(main_only=args.main)
         output_path = write_deps_json(data, args.output_path)
         print(f"Dependencies written to {output_path}")
     else:
