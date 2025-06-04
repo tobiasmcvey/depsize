@@ -5,6 +5,7 @@ description = "A package that tells you the size of your dependencies in Megabyt
 readme = "README.md"
 requires-python = ">=3.8"
 dependencies = []
+license = {file = "LICENSE"}
 
 [dependency-groups]
 dev = [
