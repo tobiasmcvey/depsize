@@ -5,6 +5,7 @@ description = "A package that tells you the size of your dependencies in Megabyt
 readme = "README.md"
 requires-python = ">=3.8"
 dependencies = []
+license = {file = "LICENSE"}
 
 [dependency-groups]
 dev = [
@@ -19,5 +20,11 @@ pydeps = "pydeps.pydeps:main"
 where = ["src"]
 
 [build-system]
-requires = ["setuptools", "wheel"]
-build-backend = "setuptools.build_meta"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[[tool.uv.index]]
+name = "testpypi"
+url = "https://test.pypi.org/simple/"
+publish-url = "https://test.pypi.org/legacy/"
+explicit = true
