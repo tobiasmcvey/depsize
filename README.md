@@ -1,4 +1,4 @@
-# Pydeps-size
+# pydeps
 
 This python package helps you measure the disk space used by your python dependencies. The purpose of this package is to help you understand how much each package contributes to the size of your app, and to help you find ways to reduce the size of the app.
 
@@ -8,16 +8,16 @@ This package has no dependencies. The [program](/src/pydeps_size/pydeps.py) only
 
 ## Install
 
-Install with your tools of choice
+Install pydeps with your tools of choice, for example
 
 pip
 ```bash
-pip install pydeps-size --dev
+pip install pydeps --dev
 ```
 
 uv
 ```bash
-uv add pydeps-size --dev
+uv add pydeps --dev
 ```
 
 Or just copy the main python program as a script. It runs on all versions greater than and including python 3.7.
@@ -223,3 +223,10 @@ Example JSON file contents:
 ```
 </details>
 
+## Developing locally
+
+```bash
+just install # to install dependencies for pydeps
+just build # to build pydeps
+uv pip install -e . # to install an editable build
+```
