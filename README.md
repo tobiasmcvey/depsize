@@ -36,7 +36,9 @@ Run ```pydeps``` to get a description of the tool
 
 ```bash
 > pydeps
-pydeps: Get the total size of installed python dependencies in MB. Use 'pydeps total' to get a summary or '--o FILE' to export as JSON
+pydeps: Get the total size of installed python dependencies in MB.
+ Use 'pydeps total' to get a summary including total size and the largest packages.
+ Use 'pydeps --o FILE' to export as JSON, f.ex 'pydeps --o data/packages.json'
 ```
 
 Run ```pydeps total``` to print the size of all packages in MB, and name the largest:
@@ -62,7 +64,7 @@ You can store the results as a json file with ```pydeps --o File```, which will 
 
 ```bash
 > pydeps --o data/packages.json
-Dependencies written to .../data/packages.json
+Dependencies written to data/packages.json
 ```
 
 Example JSON file contents:
