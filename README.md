@@ -219,6 +219,25 @@ Example JSON file contents:
 This currently works in the CLI 
 
 ```bash
-python src/pydeps_size/pydeps.py --o "../../dat
-a/deps.json"
+> pydeps
+Total size of all packages: 56.27 MB
+==================================================
+Packages larger than 1 MB:
+debugpy: 27.93 MB
+zmq: 4.99 MB
+jedi: 4.75 MB
+pygments: 4.50 MB
+IPython: 3.48 MB
+prompt_toolkit: 2.24 MB
+tornado: 1.76 MB
+
+Packages smaller than 1 MB: 68 packages
+Combined size of packages smaller than 1 MB: 6.62 MB
+```
+
+and
+
+```bash
+> pydeps --o data/dependencies.json
+Dependencies written to .../data/packages.json
 ```
