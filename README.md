@@ -4,7 +4,7 @@ This python package helps you measure the disk space used by your python depende
 
 When used in combination with `docker image history` this tool helps you find ways to reduce the total size of the docker image.
 
-This package has no dependencies. It uses the built-in packages site and Pathlib.
+This package has no dependencies. It only uses the built-in packages of python.
 
 ## Install
 
