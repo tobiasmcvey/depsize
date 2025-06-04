@@ -4,6 +4,7 @@ from pathlib import Path
 import subprocess
 import json
 import argparse
+from typing import List
 
 
 # %%
@@ -99,26 +100,29 @@ def list_installed_packages_sizes():
     )
 
 
-def get_pip_packages(main_only=False):
+def get_pip_packages(
+    main_only=False, main_req_file: Path = Path("requirements/main.txt")
+):
     """
     Gets a list of packages in json using "pip list --format=json"
 
     If main_only is True, limits to the main group (excluding dev).
     """
-    cmd = ["uv", "pip", "list", "--format=json"]
-    if main_only:
-        cmd += ["--group=main"]
-
-    res = subprocess.run(cmd, capture_output=True, text=True)
-
-    if res.returncode != 0:
-        print(f"Error running pip list: \n {res.stderr}")
-        return []
+    res = subprocess.run(
+        ["uv", "pip", "list", "--format=json"], capture_output=True, text=True
+    )
 
     try:
-        return json.loads(res.stdout)
+        packages = json.loads(res.stdout)
     except json.JSONDecodeError:
-        print(f"Failed to decode JSON:\n stdout: {res.stdout}\n stderr: {res.stderr}")
+        print("Error: Failed to parse uv pip list output")
+        return []
+
+    if main_only and main_req_file.exists():
+        main_deps = read_requirements_file(main_req_file)
+        packages = [pkg for pkg in packages if pkg["name"].lower() in main_deps]
+
+    return packages
 
 
 def write_deps_json(data: dict, file_path: Path):
@@ -174,6 +178,26 @@ def write_deps_json(data: dict, file_path: Path):
     return file_path
 
 
+def read_requirements_file(path: Path) -> List[str]:
+    """
+    Read a pip-compile style requirements file and return package names only.
+    """
+    package_names = []
+
+    with path.open("r") as f:
+        for line in f:
+            line = line.strip()
+
+            if not line or line.startswith("#") or line.startswith("-r"):
+                continue
+
+            # Remove extras, version pins, hashes, etc.
+            name = line.split("[")[0].split("==")[0].split(">")[0].split("<")[0]
+            package_names.append(name.lower())
+
+    return package_names
+
+
 # %%
 def main():
     description = "depsize: Get the total size of installed python dependencies in MB. \n Run 'depsize total' to get a summary including total size and the largest packages. \n Run 'depsize --o FILE' to export as JSON, f.ex 'depsize --o data/packages.json'"
@@ -194,13 +218,19 @@ def main():
     parser.add_argument(
         "--main", action="store_true", help="Only include main dependencies"
     )
+    parser.add_argument(
+        "--requirements",
+        type=Path,
+        default=Path("requirements/main.txt"),
+        help="Path to the requirements txt file --main mode ",
+    )
 
     args = parser.parse_args()
 
     if args.command == "total":
         list_installed_packages_sizes()
     elif args.output_path:
-        data = get_pip_packages(main_only=args.main)
+        data = get_pip_packages(main_only=args.main, main_req_file=args.requirements)
         output_path = write_deps_json(data, args.output_path)
         print(f"Dependencies written to {output_path}")
     else:
