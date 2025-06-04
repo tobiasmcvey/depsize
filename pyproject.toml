@@ -1,5 +1,5 @@
 [project]
-name = "pydeps-size"
+name = "pydeps"
 version = "0.1.0"
 description = "A package that tells you the size of your dependencies in Megabytes!"
 readme = "README.md"
