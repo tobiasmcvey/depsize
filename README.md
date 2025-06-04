@@ -4,7 +4,7 @@ This python package helps you measure the disk space used by your python depende
 
 When used in combination with `docker image history` this tool helps you find ways to reduce the total size of the docker image.
 
-This package has no third party dependencies. The [program](/src/depsize_size/depsize.py) only uses the built-in packages of python.
+This package has no third party dependencies. The [program](/src/depsize/depsize.py) only uses the built-in packages of python.
 
 Supports python version 3.8 and newer.
 
