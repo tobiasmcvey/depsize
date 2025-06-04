@@ -6,6 +6,8 @@ When used in combination with `docker image history` this tool helps you find wa
 
 This package has no third party dependencies. The [program](/src/pydeps_size/pydeps.py) only uses the built-in packages of python.
 
+Supports python version 3.8 and newer.
+
 ## Install
 
 Install pydeps with your tools of choice, for example
