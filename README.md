@@ -18,7 +18,7 @@ Install depsize with your tools of choice, for example
 pip install depsize
 ```
 
-or add depsize to your `requirements-dev.txt` file and install it with your other dev requirements using ` `pip install -r requirements-dev.txt`. 
+or add depsize to your `requirements-dev.txt` file and install it with your other dev requirements using `pip install -r requirements-dev.txt`. 
 
 **uv**
 
