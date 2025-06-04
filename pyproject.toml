@@ -13,7 +13,7 @@ dev = [
 ]
 
 [project.scripts]
-pydeps = "pydeps_size.pydeps:main"
+pydeps = "pydeps.pydeps:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
