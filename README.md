@@ -24,31 +24,39 @@ Or just copy the main python program as a script. It runs on all versions greate
 
 ## How to use pydeps
 
-You can run the pydeps package from within your application repository from the terminal using `python pydeps`
+You can run the pydeps package from within your application repository from the terminal by running 
 
-This will print the total size of dependencies and the largest packages, for example
+Run ```pydeps``` to get a description of the tool
 
 ```bash
-> python pydeps
-Total size of all packages: 35.08 MB
-==================================================
-Packages larger than 1 MB:
-debugpy: 12.61 MB
-zmq: 4.87 MB
-pygments: 4.25 MB
-jedi: 4.09 MB
-IPython: 1.82 MB
-tornado: 1.59 MB
-prompt_toolkit: 1.29 MB
-
-Packages smaller than 1 MB: 57 packages
-Combined size of packages smaller than 1 MB: 4.55 MB
+> pydeps
+pydeps: Get the total size of installed python dependencies in MB. Use 'pydeps total' to get a summary or '--o FILE' to export as JSON
 ```
 
-You can also store the results as a json file, which will contain the python packages by name, package version and size in megabytes.
+Run ```pydeps total``` to print the size of all packages in MB, and name the largest:
 
 ```bash
-> python pydeps --o data/packages.json
+> pydeps total
+Total size of all packages: 56.27 MB
+==================================================
+Packages larger than 1 MB:
+debugpy: 27.93 MB
+zmq: 4.99 MB
+jedi: 4.75 MB
+pygments: 4.50 MB
+IPython: 3.48 MB
+prompt_toolkit: 2.24 MB
+tornado: 1.76 MB
+
+Packages smaller than 1 MB: 68 packages
+Combined size of packages smaller than 1 MB: 6.62 MB
+```
+
+You can store the results as a json file with ```pydeps --o File```, which will contain the python packages by name, package version and size in megabytes.
+
+```bash
+> pydeps --o data/packages.json
+Dependencies written to .../data/packages.json
 ```
 
 Example JSON file contents:
@@ -215,34 +223,3 @@ Example JSON file contents:
 ```
 </details>
 
-
-This currently works in the CLI 
-
-```bash
-> pydeps
-pydeps: Get the total size of installed python dependencies in MB. Use 'pydeps total' to get a summary or '--o FILE' to export as JSON
-```
-
-```bash
-> pydeps total
-Total size of all packages: 56.27 MB
-==================================================
-Packages larger than 1 MB:
-debugpy: 27.93 MB
-zmq: 4.99 MB
-jedi: 4.75 MB
-pygments: 4.50 MB
-IPython: 3.48 MB
-prompt_toolkit: 2.24 MB
-tornado: 1.76 MB
-
-Packages smaller than 1 MB: 68 packages
-Combined size of packages smaller than 1 MB: 6.62 MB
-```
-
-and
-
-```bash
-> pydeps --o data/packages.json
-Dependencies written to .../data/packages.json
-```
