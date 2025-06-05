@@ -2,11 +2,9 @@
 import site
 import subprocess
 import json
-import shutil
-import sys
 import argparse
 from pathlib import Path
-from typing import List, Optional
+from typing import List
 
 
 # %%
