@@ -174,8 +174,6 @@ def read_requirements_file(path: Path) -> List[str]:
             # Remove extras, version pins, hashes, etc.
             name = line.split("==")[0].split(">=")[0].split("<=")[0].strip()
             packages.add(name)
-    if not packages:
-        print(f"No packages found in {path}. Is the file empty or does it only contain comments?")
     return list(packages)
 
 
