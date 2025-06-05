@@ -224,8 +224,10 @@ def main():
     if args.requirements_path:
         package_names = read_requirements_file(args.requirements_path)
         if not package_names:
-            print(f"No packages found in {args.requirements_path}. Is the file empty or does it only contain comments?")
-    
+            print(
+                f"No packages found in {args.requirements_path}. Is the file empty or does it only contain comments?"
+            )
+
     # command: depsize total [--from]
     if args.command == "total":
         list_installed_packages_sizes(package_names)
