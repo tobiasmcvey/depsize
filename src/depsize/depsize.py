@@ -1,9 +1,10 @@
 # %%
 import site
-from pathlib import Path
 import subprocess
 import json
 import argparse
+from pathlib import Path
+from typing import List
 
 
 # %%
@@ -34,7 +35,7 @@ def get_package_size(package_path: Path) -> float:
     return total_size / (1024**2)  # Convert to MB
 
 
-def list_installed_packages_sizes():
+def list_installed_packages_sizes(package_names=None):
     """
     List all installed packages in site-packages and their sizes.
 
@@ -44,25 +45,20 @@ def list_installed_packages_sizes():
     )  # Get list of site-packages directories
 
     package_sizes = {}
-    small_packages_count = 0
-    small_packages_total_size = 0
-
     for site_package in site_packages_paths:
         site_package_path = Path(site_package)
-
         if site_package_path.exists():
-            # Look for all subdirectories and files in the site-packages directory
             for package in site_package_path.iterdir():
-                if package.is_dir() or package.suffix in {
-                    ".py",
-                    ".egg-info",
-                    ".dist-info",
-                }:
-                    # Get the size of the package (dir or single file like .egg-info)
+                if package.is_dir() or package.suffix in {".py.egg-info", ".dist-info"}:
                     size = get_package_size(package)
                     package_sizes[package.name] = size
 
-    # Split packages into two groups: larger than 1MB and smaller than 1MB
+    if package_names is not None:
+        package_names = {name.lower() for name in package_names}
+        package_sizes = {
+            k: v for k, v in package_sizes.items() if k.lower() in package_names
+        }
+
     large_packages = {}
     small_packages_total_size = 0
     small_packages_count = 0
@@ -76,23 +72,15 @@ def list_installed_packages_sizes():
             small_packages_count += 1
             small_packages_total_size += size
 
-    # Sort the large packages by size
     sorted_large_packages = sorted(
         large_packages.items(), key=lambda x: x[1], reverse=True
     )
 
-    # Print total size of all packages
     print(f"Total size of all packages: {total_size:.2f} MB")
-
-    # Print a separator
     print("=" * 50)
-
-    # Print the large packages
-    print("Packages larger than 1 MB:")
+    print("Packages larger than  1MB: ")
     for package_name, size in sorted_large_packages:
         print(f"{package_name}: {size:.2f} MB")
-
-    # Print summary of small packages
     print(f"\nPackages smaller than 1 MB: {small_packages_count} packages")
     print(
         f"Combined size of packages smaller than 1 MB: {small_packages_total_size:.2f} MB"
@@ -102,11 +90,20 @@ def list_installed_packages_sizes():
 def get_pip_packages():
     """
     Gets a list of packages in json using "pip list --format=json"
+
+    If main_only is True, limits to the main group (excluding dev).
     """
     res = subprocess.run(
         ["uv", "pip", "list", "--format=json"], capture_output=True, text=True
     )
-    return json.loads(res.stdout)
+
+    try:
+        packages = json.loads(res.stdout)
+    except json.JSONDecodeError:
+        print("Error: Failed to parse uv pip list output")
+        return []
+
+    return packages
 
 
 def write_deps_json(data: dict, file_path: Path):
@@ -162,6 +159,40 @@ def write_deps_json(data: dict, file_path: Path):
     return file_path
 
 
+def read_requirements_file(path: Path) -> List[str]:
+    """
+    Read a pip-compile style requirements file and return package names only.
+    """
+    packages = set()
+
+    with open(path) as f:
+        for line in f:
+            line = line.strip()
+
+            if line.startswith("#") or not line or line.startswith("    "):
+                continue
+            # Remove extras, version pins, hashes, etc.
+            name = line.split("==")[0].split(">=")[0].split("<=")[0].strip()
+            packages.add(name)
+    return list(packages)
+
+
+def get_installed_package_versions(package_names=None):
+    """ """
+    res = subprocess.run(
+        ["uv", "pip", "list", "--format=json"], capture_output=True, text=True
+    )
+    installed = json.loads(res.stdout)
+    if package_names is None:
+        return installed
+    filtered = [
+        pkg
+        for pkg in installed
+        if pkg["name"].lower() in {n.lower() for n in package_names}
+    ]
+    return filtered
+
+
 # %%
 def main():
     description = "depsize: Get the total size of installed python dependencies in MB. \n Run 'depsize total' to get a summary including total size and the largest packages. \n Run 'depsize --o FILE' to export as JSON, f.ex 'depsize --o data/packages.json'"
@@ -170,7 +201,7 @@ def main():
         "command",
         nargs="?",
         choices=["total"],
-        help="Subcommand to run. Use 'total' to get size summary.",
+        help="Optional: Use 'total' to print size summary in terminal.",
     )
     parser.add_argument(
         "--o",
@@ -179,15 +210,35 @@ def main():
         type=Path,
         help="Path to output JSON file, f.ex data/packages.json",
     )
+    parser.add_argument(
+        "--from",
+        dest="requirements_path",
+        type=Path,
+        help="Path to requirements.txt file",
+    )
 
     args = parser.parse_args()
 
+    # handle optional --from argument
+    package_names = None
+    if args.requirements_path:
+        package_names = read_requirements_file(args.requirements_path)
+        if not package_names:
+            print(
+                f"No packages found in {args.requirements_path}. Is the file empty or does it only contain comments?"
+            )
+
+    # command: depsize total [--from]
     if args.command == "total":
-        list_installed_packages_sizes()
+        list_installed_packages_sizes(package_names)
+
+    # command: depsize --o FILE [--from]
     elif args.output_path:
-        data = get_pip_packages()
+        data = get_installed_package_versions(package_names)
         output_path = write_deps_json(data, args.output_path)
         print(f"Dependencies written to {output_path}")
+
+    # fallback usage message
     else:
         print(description)
 
