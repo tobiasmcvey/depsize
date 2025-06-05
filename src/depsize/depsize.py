@@ -376,12 +376,6 @@ def main():
     description = "depsize: Get the total size of installed python dependencies in MB. \n Run 'depsize total' to get a summary including total size and the largest packages. \n Run 'depsize --o FILE' to export as JSON, f.ex 'depsize --o data/packages.json'"
     parser = argparse.ArgumentParser(description=description)
     parser.add_argument(
-        "command",
-        nargs="?",
-        choices=["total"],
-        help="Subcommand to run. Use 'total' to get size summary.",
-    )
-    parser.add_argument(
         "--o",
         "--output",
         dest="output_path",
@@ -389,8 +383,15 @@ def main():
         help="Path to output JSON file, f.ex data/packages.json",
     )
     parser.add_argument(
-        "--main", action="store_true", help="Only include main dependencies"
+        "--main", action="store_true", help="Only include main dependencies in pyproject.toml or setup.cfg"
     )
+    parser.add_argument(
+        "command",
+        nargs="?",
+        choices=["total"],
+        help="Optional: Use 'total' to print size summary in terminal.",
+    )
+    # TODO: remove this?
     parser.add_argument(
         "--requirements",
         type=Path,
@@ -400,14 +401,32 @@ def main():
 
     args = parser.parse_args()
 
-    if args.command == "total":
-        list_installed_packages_sizes()
-    elif args.output_path:
-        data = get_pip_packages(main_only=args.main, main_req_file=args.requirements)
-        output_path = write_deps_json(data, args.output_path)
-        print(f"Dependencies written to {output_path}")
+    site_paths = [Path(p) for p in site.getsitepackages()]
+
+    if args.main:
+        deps = []
+        if Path("pyproject.toml").exists():
+            deps = parse_pyproject_dependencies(Path("pyproject.toml"))
+        elif Path("setup.cfg").exists():
+            deps = parse_setup_cfg_dependencies(Path("setup.cfg"))
+        else:
+            print("Error: No pyproject.toml or setup.cfg found for --main mode. Are you running pydeps in the root directory?")
+            sys.exit(1)
+        package_data = compute_package_sizes(deps, site_paths)
     else:
-        print(description)
+        installed = get_installed_packages()
+        names = [pkg["name"] for pkg in installed]
+        package_data = compute_package_sizes(names, site_paths)
+
+    if args.command == "total":
+        list_total(package_data)
+    
+    if args.output_path:
+        output_path = write_json(package_data, args.output_path)
+        print(f"Dependencies written to {output_path}")
+
+    if not args.command and not args.output_path:
+        parser.print_help()
 
 
 if __name__ == "__main__":
