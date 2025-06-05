@@ -138,7 +138,36 @@ def match_site_package(name: str, site_paths: List[Path]) -> Optional[Path]:
             return matches[0]
     return None
 
+def compute_package_sizes(package_names: List[str], site_paths: List[Path]) -> List[dict]:
+    """
+    Measures size of the packages
 
+    Args:
+    -----
+    package_names: List[str], required
+        list of packages names
+    site_paths: List[Path], required
+        list of package site paths
+
+    Returns:
+    --------
+    results, dict
+        a python dictionary containing packages and their size in Megabytes
+    """
+    results = []
+    for name in package_names:
+        path = match_site_package(name, site_paths)
+        if not path:
+            print(f"Warning: Could not find installed package for '{name}'")
+            results.append({"name": name, "size_MB": None})
+            continue
+        try:
+            size = get_package_size(path)
+            results.append({"name": name, "size_MB": round(size, 2)})
+        except Exception as e:
+            print(f"Error measuring size of '{name}': {e}")
+            results.append({"name": name, "size_MB": None})
+    return results
 
 def list_installed_packages_sizes():
     """
