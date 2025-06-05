@@ -169,6 +169,27 @@ def compute_package_sizes(package_names: List[str], site_paths: List[Path]) -> L
             results.append({"name": name, "size_MB": None})
     return results
 
+def write_json(data: List[dict], file_path: Path) -> Path:
+    """
+    Write the results to a json file
+
+    Args:
+    -----
+    data: List[dict], required
+        the data we are writing to JSON
+    file_path: Path, required
+        path to the target JSON file
+    
+    Returns:
+    --------
+    file_path, Path
+        the path to the JSON file that was written
+    """
+    file_path.parent.mkdir(parents=True, exist_ok=True)
+    with file_path.open("w") as f:
+        json.dump(data, f, indent=2)
+    return file_path
+
 def list_installed_packages_sizes():
     """
     List all installed packages in site-packages and their sizes.
