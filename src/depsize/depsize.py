@@ -391,6 +391,12 @@ def main():
         choices=["total"],
         help="Optional: Use 'total' to print size summary in terminal.",
     )
+    parser.add_argument(
+        "--backend",
+        choices=["uv", "pip", "auto"],
+        default="auto",
+        help="Choose which backend to use for listing installed packages (default: auto)",
+    )
     # TODO: remove this?
     parser.add_argument(
         "--requirements",
@@ -414,7 +420,7 @@ def main():
             sys.exit(1)
         package_data = compute_package_sizes(deps, site_paths)
     else:
-        installed = get_installed_packages()
+        installed = get_installed_packages(backend=args.backend)
         names = [pkg["name"] for pkg in installed]
         package_data = compute_package_sizes(names, site_paths)
 
