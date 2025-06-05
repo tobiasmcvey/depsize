@@ -2,6 +2,8 @@
 import site
 import subprocess
 import json
+import shutil
+import sys
 import argparse
 from pathlib import Path
 from typing import List
@@ -100,6 +102,31 @@ def parse_setup_cfg_dependencies(cfg_path: Path) -> List[str]:
                     deps.append(name.lower())
                 break
     return deps
+
+def get_installed_packages(backend: str = "auto") -> List[dict]:
+    """
+    Returns a list of installed packages
+
+    Automatically detects backend if not specified
+    """
+    if backend == "auto":
+        backend = "uv" if shutil.which("uv") else "pip"
+    
+    if backend == "uv":
+        cmd = ["uv", "pip", "list", "--format=json"]
+    elif backend == "pip":
+        cmd = [sys.executable, "-m", "pip", "list", "--format=json"]
+    else:
+        raise ValueError(f"Unknown backend: {backend}")
+    
+    res = subprocess.run(cmd, capture_output=True, text=True)
+    if res.returncode != 0:
+        raise RuntimeError(f"Failed to run: '{' '.join(cmd)}':\n{res.stderr}")
+
+    try:
+        return json.loads(res.stdout)
+    except json.JSONDecodeError:
+        raise ValueError(f"Could not parse output from '{' '.join(cmd)}'. Output:\n{res.stdout}")
 
 def list_installed_packages_sizes():
     """
