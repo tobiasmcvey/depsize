@@ -206,6 +206,7 @@ def list_total(package_sizes: List[dict]):
     print(f"\nPackages smaller than 1 MB: {len(small)} packages")
     print(f"Combined size of small packags: {sum(p['size_MB'] for p in small):.2f} MB")
 
+#TODO: remove this?
 def list_installed_packages_sizes():
     """
     List all installed packages in site-packages and their sizes.
@@ -270,7 +271,7 @@ def list_installed_packages_sizes():
         f"Combined size of packages smaller than 1 MB: {small_packages_total_size:.2f} MB"
     )
 
-
+# TODO: remove this?
 def get_pip_packages(
     main_only=False, main_req_file: Path = Path("requirements/main.txt")
 ):
@@ -295,7 +296,7 @@ def get_pip_packages(
 
     return packages
 
-
+# TODO: remove?
 def write_deps_json(data: dict, file_path: Path):
     """
     Get list of packages, check each package size, and append to the dict before writing to json
@@ -348,7 +349,7 @@ def write_deps_json(data: dict, file_path: Path):
 
     return file_path
 
-
+# TODO: remove this?
 def read_requirements_file(path: Path) -> List[str]:
     """
     Read a pip-compile style requirements file and return package names only.
@@ -367,6 +368,7 @@ def read_requirements_file(path: Path) -> List[str]:
             package_names.append(name.lower())
 
     return package_names
+
 
 
 # %%
