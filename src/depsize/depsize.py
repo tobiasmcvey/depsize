@@ -1,9 +1,9 @@
 # %%
 import site
-from pathlib import Path
 import subprocess
 import json
 import argparse
+from pathlib import Path
 from typing import List
 
 
@@ -34,6 +34,72 @@ def get_package_size(package_path: Path) -> float:
         total_size = package_path.stat().st_size
     return total_size / (1024**2)  # Convert to MB
 
+def parse_pyproject_dependencies(pyproject_path: Path) -> List[str]:
+    """
+    A method that naively reads a pyproject file in search of the dependencies string. It assumes the file is valid toml and a pyproject file.
+    
+    Args:
+    ----
+    pyproject_path: Path, required
+        path to the pyproject file
+    
+    Returns:
+    -------
+    deps, List
+        a python list of the dependencies
+    """
+    deps = []
+    in_deps_block = False
+    with pyproject_path.open("r") as f:
+        for line in f:
+            stripped = line.strip()
+            if stripped.startswith("["):
+                in_deps_block = False
+            if stripped.startswith("dependencies = ["):
+                in_deps_block = True
+                continue
+            if in_deps_block:
+                if stripped.startswith("]"):
+                    break
+                dep = stripped.strip().strip(",").strip('"').strip("'")
+                if dep:
+                    name = dep.split(">=")[0].strip("==")[0].strip("<")[0].strip()
+                    deps.append(name.lower())
+    return deps
+
+def parse_setup_cfg_dependencies(cfg_path: Path) -> List[str]:
+    """
+    A method that naively assumes a setup.cfg file contains your dependencies. It does not validate if the file is a setup.cfg file.
+
+    Args:
+    ----
+    cfg_path: Path, required
+        path to the setup.cfg file
+    
+    Returns:
+    -------
+    deps: List
+        list of the dependencies
+    """
+    deps = []
+    in_deps_block = False
+    with cfg_path.open("r") as f:
+        for line in f:
+            stripped = line.strip()
+            if stripped.startswith("["):
+                in_deps_block = stripped.lower() == "[options]"
+                continue
+            if in_deps_block and stripped.lower().startswith("install_requires"):
+                _, rest = stripped.split("=", 1)
+                entries = rest.split("\n") + [next(f).strip() for _ in range(20)]
+                for entry in entries:
+                    entry = entry.strip().strip(",").strip('"').strip("'")
+                    if not entry or entry.startswith("["):
+                        break
+                    name = entry.split(">=")[0].strip("==")[0].strip("<")[0].strip()
+                    deps.append(name.lower())
+                break
+    return deps
 
 def list_installed_packages_sizes():
     """
