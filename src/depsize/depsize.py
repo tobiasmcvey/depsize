@@ -70,7 +70,7 @@ def list_installed_packages_sizes():
 
     print(f"Total size of all packages: {total_size:.2f} MB")
     print("=" * 50)
-    print(f"Packages larger than  1MB: ")
+    print("Packages larger than  1MB: ")
     for package_name, size in sorted_large_packages:
         print(f"{package_name}: {size:.2f} MB")
     print(f"\nPackages smaller than 1 MB: {small_packages_count} packages")
