@@ -190,6 +190,22 @@ def write_json(data: List[dict], file_path: Path) -> Path:
         json.dump(data, f, indent=2)
     return file_path
 
+def list_total(package_sizes: List[dict]):
+    """
+    List the total size of packages in an app
+    """
+    large = [p for p in package_sizes if p["size_MB"] and p["size_MB"] >= 1]
+    small = [p for p in package_sizes if p["size_MB"] and p["size_MB"] < 1]
+    total = sum(p["size_MB"] for p in package_sizes if p["size_MB"] is not None)
+
+    print(f"Total size of selected packages: {total:.2f} MB")
+    print("=" * 50)
+    print("Packages larger than 1 MB:")
+    for p in sorted(large, key=lambda x: x["size_MB"], reverse=True):
+        print(f"{p['name']}: {p['size_MB']} MB")
+    print(f"\nPackages smaller than 1 MB: {len(small)} packages")
+    print(f"Combined size of small packags: {sum(p['size_MB'] for p in small):.2f} MB")
+
 def list_installed_packages_sizes():
     """
     List all installed packages in site-packages and their sizes.
