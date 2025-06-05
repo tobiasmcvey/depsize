@@ -176,7 +176,7 @@ def read_requirements_file(path: Path) -> List[str]:
             packages.add(name)
     if not packages:
         print(f"No packages found in {path}. Is the file empty or does it only contain comments?")
-    return list(package_names)
+    return list(packages)
 
 
 def get_installed_package_versions(package_names=None):
@@ -221,16 +221,24 @@ def main():
 
     args = parser.parse_args()
 
+    # handle optional --from argument
+    package_names = None
+    if args.requirements_path:
+        package_names = read_requirements_file(args.requirements_path)
+        if not package_names:
+            print(f"No packages found in {args.requirements_path}. Is the file empty or does it only contain comments?")
+    
+    # command: depsize total [--from]
     if args.command == "total":
-        list_installed_packages_sizes()
+        list_installed_packages_sizes(package_names)
+
+    # command: depsize --o FILE [--from]
     elif args.output_path:
-        if args.requirements_path:
-            package_names = read_requirements_file(args.requirements_path)
-            data = get_installed_package_versions(package_names)
-        else:
-            data = get_pip_packages()  # assumes uv for now
+        data = get_installed_package_versions(package_names)
         output_path = write_deps_json(data, args.output_path)
         print(f"Dependencies written to {output_path}")
+
+    # fallback usage message
     else:
         print(description)
 
