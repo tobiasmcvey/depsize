@@ -36,6 +36,8 @@ def get_package_size(package_path: Path) -> float:
         total_size = package_path.stat().st_size
     return total_size / (1024**2)  # Convert to MB
 
+
+# added june 5
 def parse_pyproject_dependencies(pyproject_path: Path) -> List[str]:
     """
     A method that naively reads a pyproject file in search of the dependencies string. It assumes the file is valid toml and a pyproject file.
@@ -69,6 +71,8 @@ def parse_pyproject_dependencies(pyproject_path: Path) -> List[str]:
                     deps.append(name.lower())
     return deps
 
+
+# added june 5
 def parse_setup_cfg_dependencies(cfg_path: Path) -> List[str]:
     """
     A method that naively assumes a setup.cfg file contains your dependencies. It does not validate if the file is a setup.cfg file.
@@ -103,6 +107,7 @@ def parse_setup_cfg_dependencies(cfg_path: Path) -> List[str]:
                 break
     return deps
 
+# added june 5
 def get_installed_packages(backend: str = "auto") -> List[dict]:
     """
     Returns a list of installed packages
@@ -128,6 +133,7 @@ def get_installed_packages(backend: str = "auto") -> List[dict]:
     except json.JSONDecodeError:
         raise ValueError(f"Could not parse output from '{' '.join(cmd)}'. Output:\n{res.stdout}")
 
+# added june 5
 def match_site_package(name: str, site_paths: List[Path]) -> Optional[Path]:
     """
     Tries to find the package based on its name and a list of paths
@@ -138,6 +144,7 @@ def match_site_package(name: str, site_paths: List[Path]) -> Optional[Path]:
             return matches[0]
     return None
 
+# added june 5
 def compute_package_sizes(package_names: List[str], site_paths: List[Path]) -> List[dict]:
     """
     Measures size of the packages
@@ -169,6 +176,7 @@ def compute_package_sizes(package_names: List[str], site_paths: List[Path]) -> L
             results.append({"name": name, "size_MB": None})
     return results
 
+# added june 5
 def write_json(data: List[dict], file_path: Path) -> Path:
     """
     Write the results to a json file
@@ -190,6 +198,7 @@ def write_json(data: List[dict], file_path: Path) -> Path:
         json.dump(data, f, indent=2)
     return file_path
 
+# added june 5
 def list_total(package_sizes: List[dict]):
     """
     List the total size of packages in an app
