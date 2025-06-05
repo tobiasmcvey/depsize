@@ -6,7 +6,7 @@ import shutil
 import sys
 import argparse
 from pathlib import Path
-from typing import List
+from typing import List, Optional
 
 
 # %%
@@ -127,6 +127,18 @@ def get_installed_packages(backend: str = "auto") -> List[dict]:
         return json.loads(res.stdout)
     except json.JSONDecodeError:
         raise ValueError(f"Could not parse output from '{' '.join(cmd)}'. Output:\n{res.stdout}")
+
+def match_site_package(name: str, site_paths: List[Path]) -> Optional[Path]:
+    """
+    Tries to find the package based on its name and a list of paths
+    """
+    for site_path in site_paths:
+        matches = list(site_path.glob(f"{name.replace('-','_')}*"))
+        if matches:
+            return matches[0]
+    return None
+
+
 
 def list_installed_packages_sizes():
     """
