@@ -163,18 +163,20 @@ def read_requirements_file(path: Path) -> List[str]:
     """
     Read a pip-compile style requirements file and return package names only.
     """
-    package_names = []
+    packages = set()
 
     with open(path) as f:
         for line in f:
             line = line.strip()
 
-            if line and not line.startswith("#"):
-                # Remove extras, version pins, hashes, etc.
-                name = line.split("==")[0].split(">=")[0].split("<=")[0].strip()
-                package_names.append(name)
-
-    return package_names
+            if line.startswith("#") or not line or line.startswith("    "):
+                continue
+            # Remove extras, version pins, hashes, etc.
+            name = line.split("==")[0].split(">=")[0].split("<=")[0].strip()
+            packages.add(name)
+    if not packages:
+        print(f"No packages found in {path}. Is the file empty or does it only contain comments?")
+    return list(package_names)
 
 
 def get_installed_package_versions(package_names=None):
