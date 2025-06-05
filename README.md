@@ -60,6 +60,37 @@ Packages smaller than 1 MB: 68 packages
 Combined size of packages smaller than 1 MB: 6.62 MB
 ```
 
+You can also get the total for a specific requirements.txt file:
+
+```bash
+> depsize total --from requirements/dev.txt
+Total size of all packages: 46.36 MB
+==================================================
+Packages larger than  1MB:
+debugpy: 27.93 MB
+jedi: 4.75 MB
+pygments: 4.50 MB
+IPython: 3.48 MB
+tornado: 1.76 MB
+
+Packages smaller than 1 MB: 16 packages
+Combined size of packages smaller than 1 MB: 3.94 MB
+```
+
+If there are no dependencies, depsize will also show you that:
+
+```bash
+> depsize total --from requirements/main.txt
+No packages found in requirements/main.txt. Is the file empty or does it only contain comments?
+Total size of all packages: 0.00 MB
+==================================================
+Packages larger than  1MB:
+
+Packages smaller than 1 MB: 0 packages
+Combined size of packages smaller than 1 MB: 0.00 MB
+
+```
+
 You can store the results as a json file with ```depsize --o File```, which will contain the python packages by name, package version and size in megabytes.
 
 ```bash
@@ -70,7 +101,15 @@ Dependencies written to data/packages.json
 If you only want to measure results for the main dependencies then you can extract them from a requirements txt file like so:
 
 ```bash
-> depsize --o data/packages.json --main # add main flag to only include main and exclude dev
+> depsize --o data/packages.json --from requirements/dev.txt
+Dependencies written to data/packages.json
+```
+
+As is the case with depsize total, if the requirements.txt file is empty you will be notified by depsize:
+
+```bash
+> depsize --o data/packages.json --from requirements/main.txt
+No packages found in requirements/main.txt. Is the file empty or does it only contain comments?
 Dependencies written to data/packages.json
 ```
 
