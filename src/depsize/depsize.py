@@ -35,7 +35,7 @@ def get_package_size(package_path: Path) -> float:
     return total_size / (1024**2)  # Convert to MB
 
 
-def list_installed_packages_sizes():
+def list_installed_packages_sizes(package_names=None):
     """
     List all installed packages in site-packages and their sizes.
 
@@ -49,9 +49,15 @@ def list_installed_packages_sizes():
         site_package_path = Path(site_package)
         if site_package_path.exists():
             for package in site_package_path.iterdir():
-                if package.is_dir() or package.suffix in {".py" ".egg-info", ".dist-info"}:
+                if package.is_dir() or package.suffix in {".py.egg-info", ".dist-info"}:
                     size = get_package_size(package)
                     package_sizes[package.name] = size
+
+    if package_names is not None:
+        package_names = {name.lower() for name in package_names}
+        package_sizes = {
+            k: v for k, v in package_sizes.items() if k.lower() in package_names
+        }
 
     large_packages = {}
     small_packages_total_size = 0
@@ -66,7 +72,9 @@ def list_installed_packages_sizes():
             small_packages_count += 1
             small_packages_total_size += size
 
-    sorted_large_packages = sorted(large_packages.items(), key = lambda x: x[1], reverse=True)
+    sorted_large_packages = sorted(
+        large_packages.items(), key=lambda x: x[1], reverse=True
+    )
 
     print(f"Total size of all packages: {total_size:.2f} MB")
     print("=" * 50)
@@ -74,7 +82,9 @@ def list_installed_packages_sizes():
     for package_name, size in sorted_large_packages:
         print(f"{package_name}: {size:.2f} MB")
     print(f"\nPackages smaller than 1 MB: {small_packages_count} packages")
-    print(f"Combined size of packages smaller than 1 MB: {small_packages_total_size:.2f} MB")
+    print(
+        f"Combined size of packages smaller than 1 MB: {small_packages_total_size:.2f} MB"
+    )
 
 
 def get_pip_packages():
@@ -94,6 +104,7 @@ def get_pip_packages():
         return []
 
     return packages
+
 
 def write_deps_json(data: dict, file_path: Path):
     """
@@ -147,6 +158,7 @@ def write_deps_json(data: dict, file_path: Path):
 
     return file_path
 
+
 def read_requirements_file(path: Path) -> List[str]:
     """
     Read a pip-compile style requirements file and return package names only.
@@ -164,12 +176,20 @@ def read_requirements_file(path: Path) -> List[str]:
 
     return package_names
 
-def get_installed_package_versions(package_names):
-    """
-    """
-    res = subprocess.run(["uv", "pip", "list", "--format=json"], capture_output=True, text=True)
+
+def get_installed_package_versions(package_names=None):
+    """ """
+    res = subprocess.run(
+        ["uv", "pip", "list", "--format=json"], capture_output=True, text=True
+    )
     installed = json.loads(res.stdout)
-    filtered = [pkg for pkg in installed if pkg["name"].lower() in {n.lower() for n in package_names}]
+    if package_names is None:
+        return installed
+    filtered = [
+        pkg
+        for pkg in installed
+        if pkg["name"].lower() in {n.lower() for n in package_names}
+    ]
     return filtered
 
 
@@ -191,7 +211,10 @@ def main():
         help="Path to output JSON file, f.ex data/packages.json",
     )
     parser.add_argument(
-        "--from", dest="requirements_path", type=Path, help="Path to requirements.txt file"
+        "--from",
+        dest="requirements_path",
+        type=Path,
+        help="Path to requirements.txt file",
     )
 
     args = parser.parse_args()
@@ -203,11 +226,12 @@ def main():
             package_names = read_requirements_file(args.requirements_path)
             data = get_installed_package_versions(package_names)
         else:
-            data = get_pip_packages() # assumes uv for now
+            data = get_pip_packages()  # assumes uv for now
         output_path = write_deps_json(data, args.output_path)
         print(f"Dependencies written to {output_path}")
     else:
         print(description)
+
 
 if __name__ == "__main__":
     main()
