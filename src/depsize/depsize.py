@@ -37,7 +37,6 @@ def get_package_size(package_path: Path) -> float:
     return total_size / (1024**2)  # Convert to MB
 
 
-# TODO: keep
 def list_installed_packages_sizes():
     """
     List all installed packages in site-packages and their sizes.
@@ -80,7 +79,6 @@ def list_installed_packages_sizes():
     print(f"Combined size of packages smaller than 1 MB: {small_packages_total_size:.2f} MB")
 
 
-# TODO: keep 
 def get_pip_packages():
     """
     Gets a list of packages in json using "pip list --format=json"
@@ -99,7 +97,6 @@ def get_pip_packages():
 
     return packages
 
-# TODO: keep
 def write_deps_json(data: dict, file_path: Path):
     """
     Get list of packages, check each package size, and append to the dict before writing to json
@@ -152,7 +149,6 @@ def write_deps_json(data: dict, file_path: Path):
 
     return file_path
 
-# TODO: keep
 def read_requirements_file(path: Path) -> List[str]:
     """
     Read a pip-compile style requirements file and return package names only.
