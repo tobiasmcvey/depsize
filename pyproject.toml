@@ -1,6 +1,6 @@
 [project]
 name = "depsize"
-version = "0.1.4"
+version = "0.1.5"
 description = "A package that tells you the size of your dependencies in Megabytes!"
 readme = "README.md"
 requires-python = ">=3.8"

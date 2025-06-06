@@ -43,7 +43,7 @@ IMPORT_PROJECT := "depsize"
     uv run --with {{PYPI_PROJECT}} --no-project -- python -c "import {{IMPORT_PROJECT}}"
 
 # build package
-@build: check format
+@build: check format package-test
 	rm -rf dist/; \
 	uv build
 
