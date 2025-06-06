@@ -195,7 +195,7 @@ def get_installed_package_versions(package_names=None):
 
 # %%
 def main():
-    description = "depsize: Get the total size of installed python dependencies in MB. \n Run 'depsize total' to get a summary including total size and the largest packages. \n Run 'depsize --o FILE' to export as JSON, f.ex 'depsize --o data/packages.json'"
+    description = "depsize: Get the total size of installed python dependencies in MB. \n Run 'depsize total' to get a summary including total size and the largest packages \n Run 'depsize --o FILE' to export as JSON, f.ex 'depsize --o data/packages.json' \n Add '--from' to 'depsize total' and 'depsize --o' to measure size of main and dev dependencies, f.ex 'depsize total --from requirements-main.txt'"
     parser = argparse.ArgumentParser(description=description)
     parser.add_argument(
         "command",
