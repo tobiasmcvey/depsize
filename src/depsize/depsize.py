@@ -195,9 +195,9 @@ def get_installed_package_versions(package_names=None):
 
 # %%
 def main():
-    description = """depsize: Get the total size of installed python dependencies in MB.
+    description = """depsize: Get the total size of installed python dependencies in megabytes (MB).
     Run 'depsize total' to get total size of dependencies, including the largest
-    Run 'depsize --o FILE' to export as JSON, 
+    Run 'depsize --o FILE' to export dependencies as JSON, 
         f.ex 'depsize --o data/packages.json'
     Add '--from' to 'depsize total' and 'depsize --o' to measure size of main and dev dependencies, 
         f.ex 'depsize total --from requirements-main.txt'"""
