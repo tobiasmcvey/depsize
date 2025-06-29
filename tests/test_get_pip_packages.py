@@ -64,6 +64,11 @@ def test_nothing_found(monkeypatch, capsys):
     """
     Should print an error if no tool is found
     """
+    monkeypatch.setattr(shutil, "which", lambda cmd: False)
+    result = get_pip_packages()
+    captured = capsys.readouterr()
+    assert "No supported package manager" in captured.out
+    assert result == []
 
 def test_invalid_json(monkeypatch, capsys):
     """
