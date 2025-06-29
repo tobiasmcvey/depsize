@@ -42,6 +42,12 @@ def test_poetry_fallback_message(monkeypatch, capsys):
     """
     Should print an error message if poetry is found but not pip or uv
     """
+    monkeypatch.setattr(shutil, "which", lambda cmd: cmd == "poetry")
+    result = get_pip_packages()
+    captured = capsys.readouterr()
+    assert "poetry" in captured.out
+    assert "poetry export" in captured.out
+    assert result == []
 
 def test_conda_fallback_message(monkeypatch, capsys):
     """
