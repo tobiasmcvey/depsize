@@ -4,7 +4,6 @@ import subprocess
 import json
 import argparse
 import shutil
-import sys
 from pathlib import Path
 from typing import List
 
@@ -123,9 +122,9 @@ def get_pip_packages():
     else:
         # neither installed
         print(
-            "[depsize] No supported package manager found. Looked for pip, uv, poetry and conda using 'which'",
-            file=sys.stderr)
-
+            "[depsize] No supported package manager found. Looked for pip, uv, poetry and conda using 'which'")
+        return []
+    
     res = subprocess.run(cmd, capture_output=True, text=True)
 
     if res.returncode != 0:
