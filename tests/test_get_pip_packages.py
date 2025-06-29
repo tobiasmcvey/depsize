@@ -85,6 +85,9 @@ def test_invalid_json(monkeypatch, capsys):
     assert result == []
 
 def test_command_fails(monkeypatch, capsys):
+    """
+    Test for case without a package manager
+    """
     class FakeResult:
         def __init__(self):
             self.stdout = ""
