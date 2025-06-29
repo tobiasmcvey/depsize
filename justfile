@@ -56,5 +56,12 @@ testpypi_publish:
     uv publish --index testpypi --token {{TESTPYPI_TOKEN}}
 
 # run all tests with pytest
-run_tests:
-    pytest tests/ -v
+run_tests: run_unit_tests run_integration_tests
+
+run_unit_tests:
+    @echo "Running unit tests:"
+    pytest tests/unit/ -v
+
+run_integration_tests:
+    @echo "Running integration tests:"
+    pytest tests/integration/ -v
