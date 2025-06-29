@@ -28,6 +28,15 @@ def test_pip_installed_if_uv_not_found(monkeypatch):
     """
     Should fallback to 'pip list' if uv is not found
     """
+    monkeypatch.setattr(shutil, "which", lambda cmd: cmd == "pip")
+
+    def fake_run(*args, **kwargs):
+        return FakeResult('[{"name": "bar", "version": "2.0.0"}]', 0)
+
+    monkeypatch.setattr(subprocess, "run", fake_run)
+
+    result = get_pip_packages()
+    assert result == [{"name": "bar", "version": "2.0.0"}]
 
 def test_poetry_fallback_message(monkeypatch, capsys):
     """
