@@ -95,32 +95,46 @@ def get_pip_packages():
 
     If main_only is True, limits to the main group (excluding dev).
     """
+    cmd = None
+
     if shutil.which("pip"):
         # pip installed
         cmd = ["pip", "list", "--format=json"]
     elif shutil.which("uv"):
         # uv installed
         cmd = ["uv", "pip", "list", "--format=json"]
+    elif shutil.which("poetry"):
+        print(
+            "[depsize] detected poetry, but it does not support listing packages.\n"
+            "Please run:\n"
+            "   poetry export --without-hashes -f requirements.txt > requirements.txt\n"
+            "   and then pass that file to depsize using --from."
+        )
+        return []
+    elif shutil.which("conda"):
+        print(
+            "[depsize] detected conda, but it does not support listing packages.\n"
+            "Please run:\n"
+            "   conda list --export > requirements.txt\n"
+            "   and then pass that file to depsize using --from."
+        )
+        return []
     else:
         # neither installed
         print(
-            "Error: Couldn't find pip or uv in PATH.\n"
-            "Cannot produce list of dependencies.\n"
-            "If you are using Poetry, run 'poetry export --format=requirements.txt > requirements.txt'\n"
-            "If you are using Conda, run 'conda list' or export a requirements.txt equivalent.\n"
-            "Then run: depsize --from requirements.txt",
+            "[depsize] No supported package manager found. Looked for pip, uv, poetry and conda using 'which'",
             file=sys.stderr)
 
     res = subprocess.run(cmd, capture_output=True, text=True)
 
     if res.returncode != 0:
-        print(f"Error running {' '.join(cmd)}:\n{res.stderr}")
+        print(f"[depsize] Command failed {' '.join(cmd)}:\n{res.stderr}")
         return []
 
     try:
         packages = json.loads(res.stdout)
     except json.JSONDecodeError:
-        print("Error: Failed to parse output")
+        print("[depsize] Error: Failed to parse output")
         return []
 
     return packages
