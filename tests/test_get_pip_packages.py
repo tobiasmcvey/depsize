@@ -4,6 +4,11 @@ import subprocess
 
 from depsize.depsize import get_pip_packages
 # %%
+class FakeResult:
+    def __init__(self, stdout="", returncode=0):
+        self.stdout = stdout
+        self.returncode = returncode
+
 
 def test_uv_installed(monkeypatch):
     """
