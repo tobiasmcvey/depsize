@@ -74,3 +74,14 @@ def test_invalid_json(monkeypatch, capsys):
     """
     Should handle invalid JSON from subprocess
     """
+    monkeypatch.setattr(shutil, "which", lambda cmd: cmd == "uv")
+
+    def fake_run(*args, **kwargs):
+        return FakeResult("not a json", 0)
+
+    monkeypatch.setattr(subprocess, "run", fake_run)
+
+    result = get_pip_packages()
+    assert result == []
+
+    
