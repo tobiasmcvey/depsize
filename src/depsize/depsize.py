@@ -96,15 +96,21 @@ def get_pip_packages():
     """
     if shutil.which("pip"):
         # pip installed
-        command = ["pip", "list", "--format=json"]
+        cmd = ["pip", "list", "--format=json"]
     elif shutil.which("uv"):
         # uv installed
-        command = ["uv", "pip", "list", "--format=json"]
+        cmd = ["uv", "pip", "list", "--format=json"]
     else:
         # neither installed
-        print(f"Error: Couldn't find pip or uv in PATH. Cannot produce list of dependencies.")
+        print(
+            "Error: Couldn't find pip or uv in PATH.\n"
+            "Cannot produce list of dependencies.\n"
+            "If you are using Poetry, run 'poetry export --format=requirements.txt > requirements.txt'\n"
+            "If you are using Conda, run 'conda list' or export a requirements.txt equivalent.\n"
+            "Then run: depsize --from requirements.txt",
+            file=sys.stderr)
 
-    res = subprocess.run(command, capture_output=True, text=True)
+    res = subprocess.run(cmd, capture_output=True, text=True)
 
     if res.returncode != 0:
         print(f"Error running {' '.join(command)}:\n{res.stderr}")
