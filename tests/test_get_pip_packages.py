@@ -53,6 +53,12 @@ def test_conda_fallback_message(monkeypatch, capsys):
     """
     Should print an error message if conda is found but not pip or uv
     """
+    monkeypatch.setattr(shutil, "which", lambda cmd: cmd == "conda")
+    result = get_pip_packages()
+    captured = capsys.readouterr()
+    assert "conda" in captured.out
+    assert "conda list --export" in captured.out
+    assert result == []
 
 def test_nothing_found(monkeypatch, capsys):
     """
