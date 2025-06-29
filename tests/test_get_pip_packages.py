@@ -84,4 +84,17 @@ def test_invalid_json(monkeypatch, capsys):
     result = get_pip_packages()
     assert result == []
 
-    
+def test_command_fails(monkeypatch, capsys):
+    class FakeResult:
+        def __init__(self):
+            self.stdout = ""
+            self.stderr = "Simulated error output"
+            self.returncode = 1
+
+    monkeypatch.setattr(shutil, "which", lambda cmd: True)
+    monkeypatch.setattr(subprocess, "run", lambda *a, **kw: FakeResult())
+
+    result = get_pip_packages()
+    captured = capsys.readouterr()
+    assert "Package manager command failed" in captured.out
+    assert result == []
