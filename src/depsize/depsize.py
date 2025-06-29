@@ -10,10 +10,6 @@ from typing import List
 
 
 # %%
-class FakeResult:
-    def __init__(self, stdout="", returncode=0):
-        self.stdout = stdout
-        self.returncode = returncode
 
 def get_package_size(package_path: Path) -> float:
     """
