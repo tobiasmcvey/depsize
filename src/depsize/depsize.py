@@ -128,7 +128,7 @@ def get_pip_packages():
     res = subprocess.run(cmd, capture_output=True, text=True)
 
     if res.returncode != 0:
-        print(f"[depsize] Command failed {' '.join(cmd)}:\n{res.stderr}")
+        print(f"[depsize] Package manager command failed with code {res.returncode}")
         return []
 
     try:
