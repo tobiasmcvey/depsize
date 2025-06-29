@@ -114,7 +114,7 @@ def test_invalid_json(monkeypatch, capsys):
             return "/usr/local/bin/uv"
         return None
     
-    def fake_run(cmd, captured_output=True, text=True):
+    def fake_run(cmd, capture_output=True, text=True):
         class FakeResult:
             stdout = "Not JSON"
         return FakeResult()
