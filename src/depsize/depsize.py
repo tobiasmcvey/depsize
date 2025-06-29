@@ -113,7 +113,7 @@ def get_pip_packages():
     res = subprocess.run(cmd, capture_output=True, text=True)
 
     if res.returncode != 0:
-        print(f"Error running {' '.join(command)}:\n{res.stderr}")
+        print(f"Error running {' '.join(cmd)}:\n{res.stderr}")
         return []
 
     try:
