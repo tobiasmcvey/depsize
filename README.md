@@ -1,6 +1,8 @@
 # depsize
 
-This python package helps you measure the disk space used by your python dependencies. The purpose of this package is to help you understand how much each package contributes to the size of your app, and to help you find ways to reduce the size of the app.
+The depsize package helps you measure the disk space used by your python dependencies. The purpose of this package is to help you understand how much each package contributes to the size of your app, and to help you find ways to reduce the size of the app.
+
+Depsize supports uv and pip, and although it currently cannot parse dependencies for poetry and conda, it can tell you how to do it - and use the results with depsize.
 
 When used in combination with `docker image history` this tool helps you find ways to reduce the total size of the docker image.
 
@@ -36,9 +38,12 @@ Run ```depsize``` to get a description of the tool
 
 ```bash
 > depsize
-depsize: Get the total size of installed python dependencies in MB.
- Use 'depsize total' to get a summary including total size and the largest packages.
- Use 'depsize --o FILE' to export as JSON, f.ex 'depsize --o data/packages.json'
+depsize: Get the total size of installed python dependencies in megabytes (MB).
+    Run 'depsize total' to get total size of dependencies, including the largest
+    Run 'depsize --o FILE' to export dependencies as JSON,
+        f.ex 'depsize --o data/packages.json'
+    Add '--from' to 'depsize total' and 'depsize --o' to measure size of main and dev dependencies,
+        f.ex 'depsize total --from requirements-main.txt'
 ```
 
 Run ```depsize total``` to print the size of all packages in MB, and name the largest:
@@ -117,6 +122,7 @@ Dependencies written to data/packages.json
 Example JSON file contents:
 
 <details>
+
 ```json
 [
   {
@@ -276,6 +282,7 @@ Example JSON file contents:
   }
 ]
 ```
+
 </details>
 
 ## Developing locally
