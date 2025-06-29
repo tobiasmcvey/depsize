@@ -54,3 +54,7 @@ pypi_publish:
 # publish on test python package index
 testpypi_publish:
     uv publish --index testpypi --token {{TESTPYPI_TOKEN}}
+
+# run all tests with pytest
+run_tests:
+    pytest tests/ -v
