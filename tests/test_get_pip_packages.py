@@ -3,6 +3,8 @@ import shutil
 import subprocess
 
 from depsize.depsize import get_pip_packages
+
+
 # %%
 class FakeResult:
     def __init__(self, stdout="", returncode=0):
@@ -24,6 +26,7 @@ def test_uv_installed(monkeypatch):
     result = get_pip_packages()
     assert result == [{"name": "foo", "version": "1.0.0"}]
 
+
 def test_pip_installed_if_uv_not_found(monkeypatch):
     """
     Should fallback to 'pip list' if uv is not found
@@ -38,6 +41,7 @@ def test_pip_installed_if_uv_not_found(monkeypatch):
     result = get_pip_packages()
     assert result == [{"name": "bar", "version": "2.0.0"}]
 
+
 def test_poetry_fallback_message(monkeypatch, capsys):
     """
     Should print an error message if poetry is found but not pip or uv
@@ -48,6 +52,7 @@ def test_poetry_fallback_message(monkeypatch, capsys):
     assert "poetry" in captured.out
     assert "poetry export" in captured.out
     assert result == []
+
 
 def test_conda_fallback_message(monkeypatch, capsys):
     """
@@ -60,6 +65,7 @@ def test_conda_fallback_message(monkeypatch, capsys):
     assert "conda list --export" in captured.out
     assert result == []
 
+
 def test_nothing_found(monkeypatch, capsys):
     """
     Should print an error if no tool is found
@@ -69,6 +75,7 @@ def test_nothing_found(monkeypatch, capsys):
     captured = capsys.readouterr()
     assert "No supported package manager" in captured.out
     assert result == []
+
 
 def test_invalid_json(monkeypatch, capsys):
     """
@@ -84,10 +91,12 @@ def test_invalid_json(monkeypatch, capsys):
     result = get_pip_packages()
     assert result == []
 
+
 def test_command_fails(monkeypatch, capsys):
     """
     Test for case without a package manager
     """
+
     class FakeResult:
         def __init__(self):
             self.stdout = ""
