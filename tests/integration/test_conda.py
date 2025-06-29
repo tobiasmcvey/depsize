@@ -1,6 +1,7 @@
 import subprocess
 import json
 
+
 def test_conda_list_json_schema():
     """
     Tests the conda list json schema

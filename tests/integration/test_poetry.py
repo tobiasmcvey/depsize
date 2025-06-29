@@ -1,9 +1,10 @@
 import subprocess
 import json
 
+
 def test_poetry_show_json_schema():
     """
-    Tests the poetry show json schema 
+    Tests the poetry show json schema
 
     Assumes you are running from a poetry project
     """
