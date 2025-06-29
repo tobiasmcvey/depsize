@@ -10,6 +10,7 @@ from typing import List
 
 # %%
 
+
 def get_package_size(package_path: Path) -> float:
     """
     Get the size of a package (directory or file) in MB.
@@ -122,9 +123,10 @@ def get_pip_packages():
     else:
         # neither installed
         print(
-            "[depsize] No supported package manager found. Looked for pip, uv, poetry and conda using 'which'")
+            "[depsize] No supported package manager found. Looked for pip, uv, poetry and conda using 'which'"
+        )
         return []
-    
+
     res = subprocess.run(cmd, capture_output=True, text=True)
 
     if res.returncode != 0:
