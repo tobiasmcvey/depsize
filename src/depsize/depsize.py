@@ -3,6 +3,7 @@ import site
 import subprocess
 import json
 import argparse
+import shutil
 from pathlib import Path
 from typing import List
 
@@ -93,14 +94,26 @@ def get_pip_packages():
 
     If main_only is True, limits to the main group (excluding dev).
     """
-    res = subprocess.run(
-        ["uv", "pip", "list", "--format=json"], capture_output=True, text=True
-    )
+    if shutil.which("pip"):
+        # pip installed
+        command = ["pip", "list", "--format=json"]
+    elif shutil.which("uv"):
+        # uv installed
+        command = ["uv", "pip", "list", "--format=json"]
+    else:
+        # neither installed
+        print(f"Error: Couldn't find pip or uv in PATH. Cannot produce list of dependencies.")
+
+    res = subprocess.run(command, capture_output=True, text=True)
+
+    if res.returncode != 0:
+        print(f"Error running {' '.join(command)}:\n{res.stderr}")
+        return []
 
     try:
         packages = json.loads(res.stdout)
     except json.JSONDecodeError:
-        print("Error: Failed to parse uv pip list output")
+        print("Error: Failed to parse output")
         return []
 
     return packages
