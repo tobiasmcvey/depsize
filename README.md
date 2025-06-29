@@ -1,6 +1,8 @@
 # depsize
 
-This python package helps you measure the disk space used by your python dependencies. The purpose of this package is to help you understand how much each package contributes to the size of your app, and to help you find ways to reduce the size of the app.
+The depsize package helps you measure the disk space used by your python dependencies. The purpose of this package is to help you understand how much each package contributes to the size of your app, and to help you find ways to reduce the size of the app.
+
+Depsize supports uv and pip, and although it currently cannot parse dependencies for poetry and conda, it can tell you how to do it - and use the results with depsize.
 
 When used in combination with `docker image history` this tool helps you find ways to reduce the total size of the docker image.
 
