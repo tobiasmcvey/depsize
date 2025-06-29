@@ -20,7 +20,7 @@ def test_uv_installed(monkeypatch):
         return FakeResult()
 
     monkeypatch.setattr(shutil, "which", fake_which)
-    monkeypatch.setattr(shutil, "which", fake_run)
+    monkeypatch.setattr(subprocess, "run", fake_run)
 
     pkgs = get_pip_packages()
     assert isinstance(pkgs, list)
