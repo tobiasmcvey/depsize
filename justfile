@@ -19,6 +19,8 @@ IMPORT_PROJECT := "depsize"
     uv sync --frozen
     uv pip compile pyproject.toml -o requirements/main.txt # main deps only
     uv pip compile --group dev -o requirements/dev.txt # dev 
+    uv pip install -r requirements/main.txt # install main deps
+    uv pip install -r requirements/dev.txt # install dev deps
 
 # install editable version for local development
 @edit-install:
