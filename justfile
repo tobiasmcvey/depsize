@@ -17,8 +17,8 @@ IMPORT_PROJECT := "depsize"
     mkdir -p requirements
     mkdir -p data
     uv sync --frozen
-    uv pip compile pyproject.toml -o requirements/main.txt # main deps only
-    uv pip compile --group dev -o requirements/dev.txt # dev 
+    uv pip compile pyproject.toml -o requirements/main.txt # compile main deps to txt file
+    uv pip compile --group dev -o requirements/dev.txt # compile dev deps to txt file 
     uv pip install -r requirements/main.txt # install main deps
     uv pip install -r requirements/dev.txt # install dev deps
 
