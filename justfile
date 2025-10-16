@@ -50,13 +50,13 @@ IMPORT_PROJECT := "depsize"
 	uv build
 
 # publish on python package index
-pypi_publish:
+@pypi_publish:
     uv publish --token {{PYPI_TOKEN}}
 
 # publish on test python package index
-testpypi_publish:
+@testpypi_publish:
     uv publish --index testpypi --token {{TESTPYPI_TOKEN}}
 
 # run all tests with pytest
-run_tests:
+@run_tests:
     pytest tests/ -v
