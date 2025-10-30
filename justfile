@@ -17,8 +17,10 @@ IMPORT_PROJECT := "depsize"
     mkdir -p requirements
     mkdir -p data
     uv sync --frozen
-    uv pip compile pyproject.toml -o requirements/main.txt # main deps only
-    uv pip compile --group dev -o requirements/dev.txt # dev 
+    uv pip compile pyproject.toml -o requirements/main.txt # compile main deps to txt file
+    uv pip compile --group dev -o requirements/dev.txt # compile dev deps to txt file 
+    uv pip install -r requirements/main.txt # install main deps
+    uv pip install -r requirements/dev.txt # install dev deps
 
 # install editable version for local development
 @edit-install:
@@ -48,13 +50,20 @@ IMPORT_PROJECT := "depsize"
 	uv build
 
 # publish on python package index
-pypi_publish:
+@pypi_publish:
     uv publish --token {{PYPI_TOKEN}}
 
 # publish on test python package index
-testpypi_publish:
+@testpypi_publish:
     uv publish --index testpypi --token {{TESTPYPI_TOKEN}}
 
 # run all tests with pytest
-run_tests:
+@run_tests:
     pytest tests/ -v
+
+[doc("""
+    create release with github cli
+    f.ex gh release create v1.1.1 --notes "new version"""
+    )]
+@create_release:
+    gh release create
