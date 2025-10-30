@@ -60,3 +60,10 @@ IMPORT_PROJECT := "depsize"
 # run all tests with pytest
 @run_tests:
     pytest tests/ -v
+
+[doc("""
+    create release with github cli
+    f.ex gh release create v1.1.1 --notes "new version"""
+    )]
+@create_release:
+    gh release create
