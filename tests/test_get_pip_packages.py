@@ -26,6 +26,7 @@ def test_pip3_installed(monkeypatch):
     result = get_pip_packages()
     assert result == [{"name": "bar", "version": "2.0.0"}]
 
+
 def test_pip_installed(monkeypatch):
     """
     Should run 'pip list' if pip is found
@@ -39,6 +40,7 @@ def test_pip_installed(monkeypatch):
 
     result = get_pip_packages()
     assert result == [{"name": "bar", "version": "2.0.0"}]
+
 
 def test_uv_installed(monkeypatch):
     """
