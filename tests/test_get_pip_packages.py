@@ -11,6 +11,7 @@ class FakeResult:
         self.stdout = stdout
         self.returncode = returncode
 
+
 def test_pip_installed(monkeypatch):
     """
     Should run 'pip list' if pip is found
