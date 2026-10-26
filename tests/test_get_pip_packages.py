@@ -11,6 +11,20 @@ class FakeResult:
         self.stdout = stdout
         self.returncode = returncode
 
+def test_pip_installed(monkeypatch):
+    """
+    Should run 'pip list' if pip is found
+    """
+    monkeypatch.setattr(shutil, "which", lambda cmd: cmd == "pip")
+
+    def fake_run(*args, **kwargs):
+        return FakeResult('[{"name": "bar", "version": "2.0.0"}]', 0)
+
+    monkeypatch.setattr(subprocess, "run", fake_run)
+
+    result = get_pip_packages()
+    assert result == [{"name": "bar", "version": "2.0.0"}]
+
 
 def test_uv_installed(monkeypatch):
     """
@@ -27,19 +41,16 @@ def test_uv_installed(monkeypatch):
     assert result == [{"name": "foo", "version": "1.0.0"}]
 
 
-def test_pip_installed_if_uv_not_found(monkeypatch):
+def test_conda_fallback_message(monkeypatch, capsys):
     """
-    Should fallback to 'pip list' if uv is not found
+    Should print an error message if conda is found but not pip or uv
     """
-    monkeypatch.setattr(shutil, "which", lambda cmd: cmd == "pip")
-
-    def fake_run(*args, **kwargs):
-        return FakeResult('[{"name": "bar", "version": "2.0.0"}]', 0)
-
-    monkeypatch.setattr(subprocess, "run", fake_run)
-
+    monkeypatch.setattr(shutil, "which", lambda cmd: cmd == "conda")
     result = get_pip_packages()
-    assert result == [{"name": "bar", "version": "2.0.0"}]
+    captured = capsys.readouterr()
+    assert "conda" in captured.out
+    assert "conda list --export" in captured.out
+    assert result == []
 
 
 def test_poetry_fallback_message(monkeypatch, capsys):
@@ -51,18 +62,6 @@ def test_poetry_fallback_message(monkeypatch, capsys):
     captured = capsys.readouterr()
     assert "poetry" in captured.out
     assert "poetry export" in captured.out
-    assert result == []
-
-
-def test_conda_fallback_message(monkeypatch, capsys):
-    """
-    Should print an error message if conda is found but not pip or uv
-    """
-    monkeypatch.setattr(shutil, "which", lambda cmd: cmd == "conda")
-    result = get_pip_packages()
-    captured = capsys.readouterr()
-    assert "conda" in captured.out
-    assert "conda list --export" in captured.out
     assert result == []
 
 
