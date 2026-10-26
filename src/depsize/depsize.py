@@ -98,8 +98,10 @@ def get_pip_packages():
     """
     cmd = None
 
-    if shutil.which("pip"):
-        # pip installed
+    if shutil.which("pip3"):
+        # pip3 installed
+        cmd = ["pip3", "list", "--format=json"]
+    elif shutil.which("pip"):
         cmd = ["pip", "list", "--format=json"]
     elif shutil.which("uv"):
         # uv installed
