@@ -12,9 +12,9 @@ class FakeResult:
         self.returncode = returncode
 
 
-def test_pip_installed(monkeypatch):
+def test_pip3_installed(monkeypatch):
     """
-    Should run 'pip list' if pip is found
+    Should run 'pip3 list' if pip is found
     """
     monkeypatch.setattr(shutil, "which", lambda cmd: cmd == "pip3")
 
@@ -26,6 +26,19 @@ def test_pip_installed(monkeypatch):
     result = get_pip_packages()
     assert result == [{"name": "bar", "version": "2.0.0"}]
 
+def test_pip_installed(monkeypatch):
+    """
+    Should run 'pip list' if pip is found
+    """
+    monkeypatch.setattr(shutil, "which", lambda cmd: cmd == "pip")
+
+    def fake_run(*args, **kwargs):
+        return FakeResult('[{"name": "bar", "version": "2.0.0"}]', 0)
+
+    monkeypatch.setattr(subprocess, "run", fake_run)
+
+    result = get_pip_packages()
+    assert result == [{"name": "bar", "version": "2.0.0"}]
 
 def test_uv_installed(monkeypatch):
     """
