@@ -15,7 +15,7 @@ def test_pip_installed(monkeypatch):
     """
     Should run 'pip list' if pip is found
     """
-    monkeypatch.setattr(shutil, "which", lambda cmd: cmd == "pip")
+    monkeypatch.setattr(shutil, "which", lambda cmd: cmd == "pip3")
 
     def fake_run(*args, **kwargs):
         return FakeResult('[{"name": "bar", "version": "2.0.0"}]', 0)
