@@ -6,8 +6,10 @@ on:
 
 jobs:
   release:
-    runs-on: ubuntu-24.04
-
+    runs-on: ubuntu-latest
+    environment: pypi_production
+    permissions:
+      id-token: write
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -17,6 +19,5 @@ jobs:
         run: python3 -m pip install build
       - name: "Build package"
         run: python3 -m build
-      - uses: pypa/gh-action-pypi-publish@release/v1
-        with:
-          password: ${{ secrets.PYPI }}
+      - name: Publish package distributions to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
