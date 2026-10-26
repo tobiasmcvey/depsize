@@ -5,18 +5,43 @@ on:
     types: [published]
 
 jobs:
-  release:
-    runs-on: ubuntu-24.04
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
 
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - name: "Checkout repo"
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: "Setup python"
+        uses: actions/setup-python@v5
         with:
           python-version: "3.8"
       - name: "Install dependencies"
         run: python3 -m pip install build
       - name: "Build package"
         run: python3 -m build
-      - uses: pypa/gh-action-pypi-publish@release/v1
+      - name: Upload distributions
+        uses: actions/upload-artifact@v4
         with:
-          password: ${{ secrets.PYPI }}
+          name: python-package-distributions
+          path: dist/
+  
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    environment: 
+      name: pypi_production
+    permissions:
+      id-token: write
+
+    steps:
+      - name: "Download distributions"
+        uses: actions/download-artifact@v4
+        with:
+          name: python-package-distributions
+          path: dist/
+      - name: Publish package to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
