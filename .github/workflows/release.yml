@@ -5,14 +5,16 @@ on:
     types: [published]
 
 jobs:
-  release:
+  build:
     runs-on: ubuntu-latest
-    environment: pypi_production
     permissions:
-      id-token: write
+      contents: read
+
     steps:
       - name: "Checkout repo"
         uses: actions/checkout@v4
+        with:
+          persist-credentials: false
       - name: "Setup python"
         uses: actions/setup-python@v5
         with:
@@ -21,5 +23,25 @@ jobs:
         run: python3 -m pip install build
       - name: "Build package"
         run: python3 -m build
+      - name: Upload distributions
+        uses: actions/upload-artifact@v4
+        with:
+          name: python-package-distributions
+          path: dist/
+  
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    environment: 
+      name: pypi_production
+    permissions:
+      id-token: write
+
+    steps:
+      - name: "Download distributions"
+        uses: actions/download-artifact@v4
+        with:
+          name: python-package-distributions
+          path: dist/
       - name: Publish package to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
