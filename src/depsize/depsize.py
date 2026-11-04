@@ -214,7 +214,7 @@ def read_requirements_file(path: Path) -> list[str]:
 
 
 def get_installed_package_versions(package_names=None):
-    """ """
+    """Gets a list of packages and their version number in json format"""
     res = subprocess.run(
         ["uv", "pip", "list", "--format=json"], check=True, capture_output=True, text=True
     )
