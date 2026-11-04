@@ -5,7 +5,6 @@ import json
 import argparse
 import shutil
 from pathlib import Path
-from typing import List
 
 
 # %%
@@ -197,7 +196,7 @@ def write_deps_json(data: dict, file_path: Path):
     return file_path
 
 
-def read_requirements_file(path: Path) -> List[str]:
+def read_requirements_file(path: Path) -> list[str]:
     """
     Read a pip-compile style requirements file and return package names only.
     """
