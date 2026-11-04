@@ -13,7 +13,7 @@ get_package_size(package_path=Path(".venv"))
 # %%
 # get size of a specific package
 package = "IPython"
-py_version = 3.8
+py_version = 3.11
 get_package_size(
     package_path=Path(f".venv/lib/python{py_version}/site-packages/{package}")
 )
