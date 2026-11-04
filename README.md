@@ -8,7 +8,7 @@ When used in combination with `docker image history` this tool helps you find wa
 
 This package has no third party dependencies. The [program](/src/depsize/depsize.py) only uses the built-in packages of python.
 
-Supports python version 3.8 and newer.
+Supports python version 3.11 and newer.
 
 ## Install
 
@@ -28,7 +28,7 @@ or add depsize to your `requirements-dev.txt` file and install it with your othe
 uv add depsize --dev
 ```
 
-Or just copy the main python program as a script. It runs on all versions greater than and including python 3.7.
+Or just copy the main python program as a script. It runs on all versions greater than and including python 3.11.
 
 ## How to use depsize
 
