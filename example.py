@@ -1,9 +1,10 @@
 # %%
 from pathlib import Path
+
 from src.depsize.depsize import (
     get_package_size,
-    list_installed_packages_sizes,
     get_pip_packages,
+    list_installed_packages_sizes,
     write_deps_json,
 )
 
@@ -13,7 +14,7 @@ get_package_size(package_path=Path(".venv"))
 # %%
 # get size of a specific package
 package = "IPython"
-py_version = 3.8
+py_version = 3.11
 get_package_size(
     package_path=Path(f".venv/lib/python{py_version}/site-packages/{package}")
 )

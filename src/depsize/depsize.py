@@ -1,12 +1,10 @@
 # %%
+import argparse
+import json
+import shutil
 import site
 import subprocess
-import json
-import argparse
-import shutil
 from pathlib import Path
-from typing import List
-
 
 # %%
 
@@ -129,7 +127,7 @@ def get_pip_packages():
         )
         return []
 
-    res = subprocess.run(cmd, capture_output=True, text=True)
+    res = subprocess.run(cmd, check=False, capture_output=True, text=True)
 
     if res.returncode != 0:
         print(f"[depsize] Package manager command failed with code {res.returncode}")
@@ -197,7 +195,7 @@ def write_deps_json(data: dict, file_path: Path):
     return file_path
 
 
-def read_requirements_file(path: Path) -> List[str]:
+def read_requirements_file(path: Path) -> list[str]:
     """
     Read a pip-compile style requirements file and return package names only.
     """
@@ -207,7 +205,7 @@ def read_requirements_file(path: Path) -> List[str]:
         for line in f:
             line = line.strip()
 
-            if line.startswith("#") or not line or line.startswith("    "):
+            if line.startswith(("#", "    ")) or not line:
                 continue
             # Remove extras, version pins, hashes, etc.
             name = line.split("==")[0].split(">=")[0].split("<=")[0].strip()
@@ -216,9 +214,12 @@ def read_requirements_file(path: Path) -> List[str]:
 
 
 def get_installed_package_versions(package_names=None):
-    """ """
+    """Gets a list of packages and their version number in json format"""
     res = subprocess.run(
-        ["uv", "pip", "list", "--format=json"], capture_output=True, text=True
+        ["uv", "pip", "list", "--format=json"],
+        check=True,
+        capture_output=True,
+        text=True,
     )
     installed = json.loads(res.stdout)
     if package_names is None:
