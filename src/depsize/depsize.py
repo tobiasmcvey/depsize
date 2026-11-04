@@ -205,7 +205,7 @@ def read_requirements_file(path: Path) -> list[str]:
         for line in f:
             line = line.strip()
 
-            if line.startswith("#") or not line or line.startswith("    "):
+            if line.startswith(("#", "    ")) or not line:
                 continue
             # Remove extras, version pins, hashes, etc.
             name = line.split("==")[0].split(">=")[0].split("<=")[0].strip()
