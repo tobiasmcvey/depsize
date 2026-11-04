@@ -216,7 +216,7 @@ def read_requirements_file(path: Path) -> list[str]:
 def get_installed_package_versions(package_names=None):
     """ """
     res = subprocess.run(
-        ["uv", "pip", "list", "--format=json"], capture_output=True, text=True
+        ["uv", "pip", "list", "--format=json"], check=True, capture_output=True, text=True
     )
     installed = json.loads(res.stdout)
     if package_names is None:
