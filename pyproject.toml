@@ -3,7 +3,7 @@ name = "depsize"
 version = "0.2.3"
 description = "A package that tells you the size of your dependencies in Megabytes!"
 readme = "README.md"
-requires-python = ">=3.8"
+requires-python = ">=3.11"
 dependencies = []
 keywords = ["dependencies", "python"]
 license = {file = "LICENSE"}
