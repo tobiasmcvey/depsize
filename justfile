@@ -28,7 +28,7 @@ IMPORT_PROJECT := "depsize"
 
 # update dependencies in lockfile
 @update:
-    uv lock --upgrade
+    uv sync --upgrade
     uv pip compile pyproject.toml -o requirements/main.txt # main deps only
     uv pip compile --group dev -o requirements/dev.txt # dev 
 
